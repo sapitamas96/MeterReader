@@ -9,10 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MeterReadingDTO {
+public class YearlyConsumptionOutputDTO {
 
-    private String clientId;
     private Integer year;
-    private String month;
-    private Integer reading;
+    private Integer consumption;
 }

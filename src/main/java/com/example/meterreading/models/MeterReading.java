@@ -1,5 +1,6 @@
 package com.example.meterreading.models;
 
+import com.example.meterreading.dtos.MeterReadingDTO;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,4 +20,11 @@ public class MeterReading {
     private Integer year;
     private String month;
     private Integer reading;
+
+    public MeterReading(MeterReadingDTO meterReadingDTO) {
+        this.clientId = meterReadingDTO.getClientId();
+        this.year = meterReadingDTO.getYear();
+        this.month = meterReadingDTO.getMonth();
+        this.reading = meterReadingDTO.getReading();
+    }
 }

@@ -1,8 +1,10 @@
 package com.example.meterreading.services;
 
 import com.example.meterreading.dtos.MeterReadingDTO;
-import com.example.meterreading.dtos.YearlyConsumptionDTO;
+import com.example.meterreading.dtos.YearlyConsumptionInputDTO;
+import com.example.meterreading.dtos.YearlyConsumptionOutputDTO;
 import com.example.meterreading.models.Client;
+import com.example.meterreading.models.MeterReading;
 import com.example.meterreading.repositories.ClientRepo;
 import com.example.meterreading.repositories.MeterReadingRepo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,12 +25,21 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
     }
 
     @Override
-    public ResponseEntity<YearlyConsumptionDTO> yearlyConsumption(MeterReadingDTO meterReadingDTO, String remoteAddr) {
-        String clientId = meterReadingDTO.getClientId();
-        int year = meterReadingDTO.getYear();
+    public ResponseEntity<YearlyConsumptionOutputDTO> yearlyConsumption(YearlyConsumptionInputDTO yearlyConsumptionInputDTO, String remoteAddr) {
+        String clientId = yearlyConsumptionInputDTO.getClientId();
+        int year = yearlyConsumptionInputDTO.getYear();
 
         if (validateClientAndSaveIfFirstFromIp(remoteAddr, clientId)) {
-            return new ResponseEntity<>(new YearlyConsumptionDTO(year, meterReadingRepo.yearlyConsumption(clientId,year)), HttpStatus.OK);
+            return new ResponseEntity<>(new YearlyConsumptionOutputDTO(year, meterReadingRepo.yearlyConsumption(clientId,year)), HttpStatus.OK);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
+    public ResponseEntity<MeterReadingDTO> save(MeterReadingDTO meterReadingDTO, String remoteAddr) {
+        if (validateClientAndSaveIfFirstFromIp(remoteAddr, meterReadingDTO.getClientId())) {
+            meterReadingRepo.save(new MeterReading(meterReadingDTO));
+            return ResponseEntity.ok().body(meterReadingDTO);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
