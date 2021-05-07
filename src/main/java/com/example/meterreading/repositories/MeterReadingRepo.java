@@ -14,4 +14,7 @@ public interface MeterReadingRepo extends CrudRepository<MeterReading, Long> {
 
     @Query(value = "SELECT meter_reading.month, reading FROM meter_reading WHERE client_id = :clientId AND year = :year", nativeQuery = true)
     List<String[]> yearlyPerMonthConsumption(String clientId, Integer year);
+
+    @Query(value = "SELECT reading FROM meter_reading WHERE client_id = :clientId AND year = :year AND meter_reading.month = :month", nativeQuery = true)
+    Integer monthlyConsumption(String clientId, Integer year, String month);
 }

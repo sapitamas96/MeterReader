@@ -1,6 +1,7 @@
 package com.example.meterreading.controllers;
 
 import com.example.meterreading.dtos.MeterReadingDTO;
+import com.example.meterreading.dtos.MonthConsumptionDTO;
 import com.example.meterreading.dtos.YearlyConsumptionDTO;
 import com.example.meterreading.dtos.YearlyPerMonthConsumptionDTO;
 import com.example.meterreading.services.MeterReadingService;
@@ -34,5 +35,10 @@ public class MainController {
     @GetMapping("/yearly/month")
     public ResponseEntity<YearlyPerMonthConsumptionDTO> yearlyPerMonthConsumption(@RequestBody MeterReadingDTO meterReadingDTO, HttpServletRequest request) {
         return meterReadingService.yearlyPerMonthConsumption(meterReadingDTO, request.getRemoteAddr());
+    }
+
+    @GetMapping("/month")
+    public ResponseEntity<MonthConsumptionDTO> monthConsumption(@RequestBody MeterReadingDTO meterReadingDTO, HttpServletRequest request) {
+        return meterReadingService.monthlyConsumption(meterReadingDTO, request.getRemoteAddr());
     }
 }
