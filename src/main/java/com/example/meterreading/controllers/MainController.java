@@ -2,6 +2,7 @@ package com.example.meterreading.controllers;
 
 import com.example.meterreading.dtos.MeterReadingDTO;
 import com.example.meterreading.dtos.YearlyConsumptionDTO;
+import com.example.meterreading.dtos.YearlyPerMonthConsumptionDTO;
 import com.example.meterreading.services.MeterReadingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,11 +21,6 @@ public class MainController {
         this.meterReadingService = meterReadingService;
     }
 
-    @GetMapping("/ip")
-    public void ip(HttpServletRequest request) {
-        System.out.println(request.getRemoteAddr());
-    }
-
     @PostMapping("/add")
     public ResponseEntity<MeterReadingDTO> saveMeterReading(@RequestBody MeterReadingDTO meterReadingDTO, HttpServletRequest request) {
         return meterReadingService.save(meterReadingDTO, request.getRemoteAddr());
@@ -33,5 +29,10 @@ public class MainController {
     @GetMapping("/yearly")
     public ResponseEntity<YearlyConsumptionDTO> yearlyConsumption(@RequestBody MeterReadingDTO meterReadingDTO, HttpServletRequest request) {
         return meterReadingService.yearlyConsumption(meterReadingDTO, request.getRemoteAddr());
+    }
+
+    @GetMapping("/yearly/month")
+    public ResponseEntity<YearlyPerMonthConsumptionDTO> yearlyPerMonthConsumption(@RequestBody MeterReadingDTO meterReadingDTO, HttpServletRequest request) {
+        return meterReadingService.yearlyPerMonthConsumption(meterReadingDTO, request.getRemoteAddr());
     }
 }

@@ -2,6 +2,7 @@ package com.example.meterreading.services;
 
 import com.example.meterreading.dtos.MeterReadingDTO;
 import com.example.meterreading.dtos.YearlyConsumptionDTO;
+import com.example.meterreading.dtos.YearlyPerMonthConsumptionDTO;
 import com.example.meterreading.models.Client;
 import com.example.meterreading.models.MeterReading;
 import com.example.meterreading.repositories.ClientRepo;
@@ -11,8 +12,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.Month;
 import java.time.Year;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class MeterReadingServiceImpl implements  MeterReadingService {
@@ -27,6 +33,15 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
     }
 
     @Override
+    public ResponseEntity<MeterReadingDTO> save(MeterReadingDTO meterReadingDTO, String remoteAddr) {
+        if (validateClientAndSaveIfFirstFromIp(remoteAddr, meterReadingDTO.getClientId()) && validateData(meterReadingDTO)) {
+            meterReadingRepo.save(new MeterReading(meterReadingDTO));
+            return ResponseEntity.ok().body(meterReadingDTO);
+        }
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @Override
     public ResponseEntity<YearlyConsumptionDTO> yearlyConsumption(MeterReadingDTO meterReadingDTO, String remoteAddr) {
         String clientId = meterReadingDTO.getClientId();
         int year = meterReadingDTO.getYear();
@@ -38,10 +53,14 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
     }
 
     @Override
-    public ResponseEntity<MeterReadingDTO> save(MeterReadingDTO meterReadingDTO, String remoteAddr) {
-        if (validateClientAndSaveIfFirstFromIp(remoteAddr, meterReadingDTO.getClientId()) && validateData(meterReadingDTO)) {
-            meterReadingRepo.save(new MeterReading(meterReadingDTO));
-            return ResponseEntity.ok().body(meterReadingDTO);
+    public ResponseEntity<YearlyPerMonthConsumptionDTO> yearlyPerMonthConsumption(MeterReadingDTO meterReadingDTO, String remoteAddr) {
+        String clientId = meterReadingDTO.getClientId();
+        int year = meterReadingDTO.getYear();
+
+        if (validateClientAndSaveIfFirstFromIp(remoteAddr, clientId)) {
+            List<String[]> monthlyConsumption = meterReadingRepo.yearlyPerMonthConsumption(clientId, meterReadingDTO.getYear());
+            Map<String, Integer> monthlyConsumptionMap = monthlyConsumption.stream().collect(Collectors.toMap(a -> a[0], a -> Integer.parseInt(a[1])));
+            return new ResponseEntity<>(new YearlyPerMonthConsumptionDTO(year, monthlyConsumptionMap), HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
@@ -63,7 +82,7 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
         boolean validMonth = false;
 
         for (Month month : Month.values()) {
-            if (month.toString().toLowerCase().equals(meterReadingDTO.getMonth().toLowerCase())) {
+            if (month.toString().equalsIgnoreCase(meterReadingDTO.getMonth())) {
                 validMonth = true;
             }
         }
