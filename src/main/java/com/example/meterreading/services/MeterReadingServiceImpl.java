@@ -48,8 +48,11 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
         Client client= clientRepo.findByIpAddress(ip);
 
         if (client == null) {
-            clientRepo.save(new Client(ip, clientId));
-            return true;
+            if (clientRepo.findAllByClientId(clientId) == null) {
+                clientRepo.save(new Client(ip, clientId));
+                return true;
+            }
+            return false;
         }
         return clientId.equals(client.getClientId());
     }
