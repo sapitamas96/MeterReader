@@ -1,8 +1,7 @@
 package com.example.meterreading.controllers;
 
 import com.example.meterreading.dtos.MeterReadingDTO;
-import com.example.meterreading.dtos.YearlyConsumptionInputDTO;
-import com.example.meterreading.dtos.YearlyConsumptionOutputDTO;
+import com.example.meterreading.dtos.YearlyConsumptionDTO;
 import com.example.meterreading.services.MeterReadingService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class MainController {
     }
 
     @GetMapping("/yearly")
-    public ResponseEntity<YearlyConsumptionOutputDTO> yearlyConsumption(@RequestBody YearlyConsumptionInputDTO yearlyConsumptionInputDTO, HttpServletRequest request) {
-        return meterReadingService.yearlyConsumption(yearlyConsumptionInputDTO, request.getRemoteAddr());
+    public ResponseEntity<YearlyConsumptionDTO> yearlyConsumption(@RequestBody MeterReadingDTO meterReadingDTO, HttpServletRequest request) {
+        return meterReadingService.yearlyConsumption(meterReadingDTO, request.getRemoteAddr());
     }
 }

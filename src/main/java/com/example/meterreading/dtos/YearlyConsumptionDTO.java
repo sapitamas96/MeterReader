@@ -9,8 +9,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class YearlyConsumptionInputDTO {
+public class YearlyConsumptionDTO {
 
-    private String clientId;
     private Integer year;
+    private Integer consumption;
 }
