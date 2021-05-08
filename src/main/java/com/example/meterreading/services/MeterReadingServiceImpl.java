@@ -33,7 +33,7 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
 
     @Override
     public ResponseEntity<MeterReadingDTO> save(MeterReadingDTO meterReadingDTO, String remoteAddr) {
-        if (validateClientAndSaveIfFirstFromIp(remoteAddr, meterReadingDTO.getClientId()) && validateData(meterReadingDTO)) {
+        if (validateClientAndSaveIfFirstFromIp(remoteAddr, meterReadingDTO.getClientId()) && validateMeterReadingData(meterReadingDTO)) {
             meterReadingRepo.save(new MeterReading(meterReadingDTO));
             return ResponseEntity.ok().body(meterReadingDTO);
         }
@@ -89,7 +89,13 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
         return clientId.equals(client.getClientId());
     }
 
-    private boolean validateData(MeterReadingDTO meterReadingDTO) {
+    private boolean validateMeterReadingData(MeterReadingDTO meterReadingDTO) {
+        Integer reading = meterReadingDTO.getReading();
+
+        return validateDate(meterReadingDTO) && reading != null && reading >= 0 && !isMonthlyReadingAlreadyExist(meterReadingDTO);
+    }
+
+    private boolean validateDate(MeterReadingDTO meterReadingDTO) {
         boolean validMonth = false;
 
         for (Month month : Month.values()) {
@@ -98,8 +104,10 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
             }
         }
 
-        Integer reading = meterReadingDTO.getReading();
+        return meterReadingDTO.getYear() <= Year.now().getValue() && validMonth;
+    }
 
-        return meterReadingDTO.getYear() <= Year.now().getValue() && validMonth && reading != null && reading >= 0;
+    private boolean isMonthlyReadingAlreadyExist(MeterReadingDTO meterReadingDTO) {
+        return meterReadingRepo.monthlyConsumption(meterReadingDTO.getClientId(), meterReadingDTO.getYear(), meterReadingDTO.getMonth()) != null;
     }
 }
