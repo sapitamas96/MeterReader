@@ -12,5 +12,5 @@ import lombok.Setter;
 public class YearlyConsumptionDTO {
 
     private Integer year;
-    private Integer consumption;
+    private Double consumption;
 }

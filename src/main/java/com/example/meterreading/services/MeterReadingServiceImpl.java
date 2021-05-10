@@ -45,9 +45,10 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
     public ResponseEntity yearlyConsumption(MeterReadingDTO meterReadingDTO, String remoteAddr) {
         String clientId = meterReadingDTO.getClientId();
         int year = meterReadingDTO.getYear();
+        Double yearlyConsumption = meterReadingRepo.yearlyConsumption(clientId,year);
 
-        if (validateClientAndSaveIfFirstFromIp(remoteAddr, clientId)) {
-            return new ResponseEntity<>(new YearlyConsumptionDTO(year, meterReadingRepo.yearlyConsumption(clientId,year)), HttpStatus.OK);
+        if (validateClientAndSaveIfFirstFromIp(remoteAddr, clientId) && yearlyConsumption != null) {
+            return new ResponseEntity<>(new YearlyConsumptionDTO(year, yearlyConsumption), HttpStatus.OK);
         }
         return ResponseEntity.badRequest().body(new HashMap<String, String>() {{put("error", "Invalid values!");}});
     }
@@ -56,10 +57,10 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
     public ResponseEntity yearlyPerMonthConsumption(MeterReadingDTO meterReadingDTO, String remoteAddr) {
         String clientId = meterReadingDTO.getClientId();
         int year = meterReadingDTO.getYear();
+        List<String[]> monthlyConsumption = meterReadingRepo.yearlyPerMonthConsumption(clientId, meterReadingDTO.getYear());
 
-        if (validateClientAndSaveIfFirstFromIp(remoteAddr, clientId)) {
-            List<String[]> monthlyConsumption = meterReadingRepo.yearlyPerMonthConsumption(clientId, meterReadingDTO.getYear());
-            Map<String, Integer> monthlyConsumptionMap = monthlyConsumption.stream().collect(Collectors.toMap(a -> a[0], a -> Integer.parseInt(a[1])));
+        if (validateClientAndSaveIfFirstFromIp(remoteAddr, clientId) && !monthlyConsumption.isEmpty()) {
+            Map<String, Double> monthlyConsumptionMap = monthlyConsumption.stream().collect(Collectors.toMap(a -> a[0], a -> Double.parseDouble(a[1])));
             return new ResponseEntity<>(new YearlyPerMonthConsumptionDTO(year, monthlyConsumptionMap), HttpStatus.OK);
         }
         return ResponseEntity.badRequest().body(new HashMap<String, String>() {{put("error", "Invalid values!");}});
@@ -70,9 +71,10 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
         String clientId = meterReadingDTO.getClientId();
         int year = meterReadingDTO.getYear();
         String month = meterReadingDTO.getMonth();
+        Double monthlyConsumption = meterReadingRepo.monthlyConsumption(clientId, year, month);
 
-        if (validateClientAndSaveIfFirstFromIp(remoteAddr, clientId)) {
-            return new ResponseEntity<>(new MonthConsumptionDTO(year, month, meterReadingRepo.monthlyConsumption(clientId, year, month)), HttpStatus.OK);
+        if (validateClientAndSaveIfFirstFromIp(remoteAddr, clientId) && monthlyConsumption != null) {
+            return new ResponseEntity<>(new MonthConsumptionDTO(year, month, monthlyConsumption), HttpStatus.OK);
         }
         return ResponseEntity.badRequest().body(new HashMap<String, String>() {{put("error", "Invalid values!");}});
     }
@@ -91,7 +93,7 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
     }
 
     private boolean validateMeterReadingData(MeterReadingDTO meterReadingDTO) {
-        Integer reading = meterReadingDTO.getReading();
+        Double reading = meterReadingDTO.getReading();
 
         return validateDate(meterReadingDTO) && reading != null && reading >= 0 && !isMonthlyReadingAlreadyExist(meterReadingDTO);
     }

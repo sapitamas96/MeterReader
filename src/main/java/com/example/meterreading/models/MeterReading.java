@@ -24,7 +24,7 @@ public class MeterReading {
     private String clientId;
     private Integer year;
     private String month;
-    private Integer reading;
+    private Double reading;
 
     public MeterReading(MeterReadingDTO meterReadingDTO) {
         this.clientId = meterReadingDTO.getClientId();

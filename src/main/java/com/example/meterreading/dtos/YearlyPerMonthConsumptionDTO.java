@@ -14,5 +14,5 @@ import java.util.Map;
 public class YearlyPerMonthConsumptionDTO {
 
     private Integer year;
-    private Map<String, Integer> monthlyConsumption;
+    private Map<String, Double> monthlyConsumption;
 }

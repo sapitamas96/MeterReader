@@ -13,5 +13,5 @@ public class MonthConsumptionDTO {
 
     private Integer year;
     private String month;
-    private Integer consumption;
+    private Double consumption;
 }
