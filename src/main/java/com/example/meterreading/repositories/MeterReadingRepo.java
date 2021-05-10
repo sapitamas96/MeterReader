@@ -4,17 +4,16 @@ import com.example.meterreading.models.MeterReading;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import java.util.HashMap;
 import java.util.List;
 
 public interface MeterReadingRepo extends CrudRepository<MeterReading, Long> {
 
-    @Query(value = "SELECT Sum(reading) FROM meter_reading WHERE client_id = :clientId AND year = :year GROUP BY year", nativeQuery = true)
+    @Query(value = "SELECT Sum(consumption) FROM meter_reading WHERE client_id = :clientId AND year = :year GROUP BY year", nativeQuery = true)
     Double yearlyConsumption(String clientId, Integer year);
 
-    @Query(value = "SELECT meter_reading.month, reading FROM meter_reading WHERE client_id = :clientId AND year = :year", nativeQuery = true)
+    @Query(value = "SELECT meter_reading.month, consumption FROM meter_reading WHERE client_id = :clientId AND year = :year", nativeQuery = true)
     List<String[]> yearlyPerMonthConsumption(String clientId, Integer year);
 
-    @Query(value = "SELECT reading FROM meter_reading WHERE client_id = :clientId AND year = :year AND meter_reading.month = :month", nativeQuery = true)
+    @Query(value = "SELECT consumption FROM meter_reading WHERE client_id = :clientId AND year = :year AND meter_reading.month = :month", nativeQuery = true)
     Double monthlyConsumption(String clientId, Integer year, String month);
 }
