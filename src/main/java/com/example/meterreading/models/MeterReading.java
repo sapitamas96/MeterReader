@@ -24,12 +24,12 @@ public class MeterReading {
     private String clientId;
     private Integer year;
     private String month;
-    private Double reading;
+    private Double consumption;
 
     public MeterReading(MeterReadingDTO meterReadingDTO) {
         this.clientId = meterReadingDTO.getClientId();
         this.year = meterReadingDTO.getYear();
         this.month = meterReadingDTO.getMonth();
-        this.reading = meterReadingDTO.getConsumption();
+        this.consumption = meterReadingDTO.getConsumption();
     }
 }

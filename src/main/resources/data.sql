@@ -1,4 +1,4 @@
-INSERT INTO meter_reading(client_id, meter_reading.month, reading, meter_reading.year)
+INSERT INTO meter_reading(client_id, meter_reading.month, consumption, meter_reading.year)
 VALUES ('Fj8VJPcYnF', 'December', 17, 2020),
        ('Fj8VJPcYnF', 'January', 10.5, 2021),
        ('Fj8VJPcYnF', 'February', 15, 2021),
@@ -6,7 +6,7 @@ VALUES ('Fj8VJPcYnF', 'December', 17, 2020),
        ('Fj8VJPcYnF', 'April', 16.5, 2021),
        ('Fj8VJPcYnF', 'May', 12, 2021);
 
-INSERT INTO meter_reading(client_id, meter_reading.month, reading, meter_reading.year)
+INSERT INTO meter_reading(client_id, meter_reading.month, consumption, meter_reading.year)
 VALUES ('ePmXU7j3H5', 'September', 12, 2020),
        ('ePmXU7j3H5', 'October', 14, 2020),
        ('ePmXU7j3H5', 'November', 17.5, 2020),
