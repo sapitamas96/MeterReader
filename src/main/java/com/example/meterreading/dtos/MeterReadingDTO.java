@@ -14,5 +14,5 @@ public class MeterReadingDTO {
     private String clientId;
     private Integer year;
     private String month;
-    private Double reading;
+    private Double consumption;
 }

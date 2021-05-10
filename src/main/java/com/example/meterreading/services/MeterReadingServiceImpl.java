@@ -93,7 +93,7 @@ public class MeterReadingServiceImpl implements  MeterReadingService {
     }
 
     private boolean validateMeterReadingData(MeterReadingDTO meterReadingDTO) {
-        Double reading = meterReadingDTO.getReading();
+        Double reading = meterReadingDTO.getConsumption();
 
         return validateDate(meterReadingDTO) && reading != null && reading >= 0 && !isMonthlyReadingAlreadyExist(meterReadingDTO);
     }

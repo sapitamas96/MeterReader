@@ -30,6 +30,6 @@ public class MeterReading {
         this.clientId = meterReadingDTO.getClientId();
         this.year = meterReadingDTO.getYear();
         this.month = meterReadingDTO.getMonth();
-        this.reading = meterReadingDTO.getReading();
+        this.reading = meterReadingDTO.getConsumption();
     }
 }
